@@ -1,0 +1,39 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'students/style.css' %}">
+
+<h2>Welcome, {{ user.username }}!</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <p class="message">{{ message }}</p>
+  {% endfor %}
+{% endif %}
+
+<h3>Available Subjects</h3>
+<form method="post">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th>Subject</th>
+      <th>Schedule</th>
+      <th>Teacher</th>
+      <th>Action</th>
+    </tr>
+    {% for subject in subjects %}
+    <tr>
+      <td>{{ subject.name }}</td>
+      <td>{{ subject.schedule_day }} {{ subject.schedule_time }}</td>
+      <td>{{ subject.teacher.name }}</td>
+      <td>
+        {% if subject.id in enrolled_subjects %}
+          Already Enrolled
+        {% else %}
+          <button type="submit" name="subject_id" value="{{ subject.id }}">Enroll</button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+
+<a href="{% url 'logout' %}">Logout</a>
